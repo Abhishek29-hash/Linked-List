@@ -4,65 +4,58 @@ struct Node{
     public:
     int data;
     Node* next;
+    Node* back;
 
-    Node(int data,Node* next){
+    Node(int data,Node* next, Node* back){
         this->data = data;
         this->next = next;
+        this->back = back;
     }
+
     Node(int data){
         this->data = data;
+        next = nullptr;
+        back = nullptr;
     }
 };
 
-Node* convertarr2ll(vector<int>&v){
-    Node* head = new Node(v[0],nullptr);
-    Node* mover = head;
+Node* convertarr2DLL(vector<int>&v){
+    Node* head = new Node(v[0]);
+    Node* prev = head;
     for(int i = 1;i<v.size();i++){
-        Node* temp = new Node(v[i],nullptr);
-        mover->next = temp;
-        // we can use ant one
-        // mover = temp;
-        mover = mover->next;
+        Node* temp = new Node(v[i],nullptr,prev);
+        prev->next = temp;
+        prev = temp;
     }
     return head;
 }
 
-int lengthll(Node* head){
-    Node* temp = head;
-    int cnt = 0;
-    while(temp){
-        cnt++;
-        temp = temp->next;
-    }
-    return cnt;
+Node* delete_head(Node* head){
+    if(head == nullptr || head->next == nullptr) return NULL;
+    Node* prev = head;
+    head = head->next;
+    head->back = nullptr;
+    prev->next = nullptr;
+    delete prev;
+    return head;
 }
 
-bool check_present(Node* head , int val){
-    Node* temp = head;
-    while(temp){
-        if(temp->data == val) return true;
-        temp = temp->next;
+void print(Node* head){
+    while(head){
+        cout << head->data <<" ";
+        head = head->next;
     }
-    return false;
+    cout <<"\n->>>>>>>>>>>>>>>>>>\n";
 }
+
 int main(){
-    vector<int>v ={1,2,3,4,5,6};
-    Node* head = convertarr2ll(v);
-    cout << head->data;
-
-    cout <<"\n->>>>>>>>>>>>>>>>>>>>>>>>>\n";
-
+    vector<int>v = {1,2,3,4,5,6,7};
+    Node* head = convertarr2DLL(v);
     Node* temp = head;
-    while(temp){
-        cout << temp->data <<" ";
-        temp = temp->next;
-    }
-    cout <<"\n";
 
-    int length = lengthll(head);
-    cout <<"\n" << length <<endl;
+    print(head);
 
+    head = delete_head(head);
 
-    cout <<"->>>>>>>>>>>>>>>>>>\n";
-    cout <<check_present(head,15);
+    print(head);
 }
